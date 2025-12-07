@@ -16,12 +16,12 @@ export const fetchExchangeRates = async (baseCurrency = 'USD') => {
 
         const response = await fetch(`${BASE_URL}/rates/${baseCurrency}`);
         if (!response.ok) {
-            throw new Error('Не вдалося отримати курси');
+            throw new Error('Не удалось получить курсы');
         }
         const data = await response.json();
         return data.rates;
     } catch (error) {
-        console.error('Помилка отримання курсів:', error);
+        console.error('Ошибка получения курсов:', error);
         return {};
     }
 };
@@ -43,12 +43,12 @@ export const convertCurrency = async (amount, from, to) => {
         });
 
         if (!response.ok) {
-            throw new Error('Помилка конвертації');
+            throw new Error('Ошибка конвертации');
         }
 
         return await response.json();
     } catch (error) {
-        console.error('Помилка конвертації:', error);
+        console.error('Ошибка конвертации:', error);
         throw error;
     }
 };

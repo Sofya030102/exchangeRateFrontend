@@ -53,7 +53,7 @@ const CurrencyConverter = ({ onSuccess, initialPair }) => {
                 setFavorites(formatted);
             }
         } catch (err) {
-            console.error("Помилка завантаження обраного:", err);
+            console.error("Ошибка загрузки избранного:", err);
         }
     };
 
@@ -110,7 +110,7 @@ const CurrencyConverter = ({ onSuccess, initialPair }) => {
 
     const handleFavoriteToggle = async () => {
         if (!token) {
-            message.warning("Увійдіть, щоб додавати в обране");
+            message.warning("Войдите, чтобы добавлять в избранное");
             return;
         }
 
@@ -121,7 +121,7 @@ const CurrencyConverter = ({ onSuccess, initialPair }) => {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                message.success("Видалено з обраного");
+                message.success("Удалено из избранного");
             } else {
 
                 await fetch(`${BASE_URL}/favorites`, {
@@ -136,12 +136,12 @@ const CurrencyConverter = ({ onSuccess, initialPair }) => {
                         label: `${fromCurrency} → ${toCurrency}`
                     })
                 });
-                message.success("Додано в обране");
+                message.success("Добавлено в избранное");
             }
 
             fetchFavorites();
         } catch (err) {
-            message.error("Помилка оновлення обраного");
+            message.error("Ошибка обновления избранного");
         }
     };
 
