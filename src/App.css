@@ -1,0 +1,65 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f2f5;
+}
+
+/* Общие стили */
+.ant-layout {
+  background: transparent;
+}
+
+/* Конвертер */
+.converter-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.converter-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .ant-layout-header {
+    padding: 0 10px !important;
+  }
+  
+  .ant-layout-content {
+    padding: 10px !important;
+  }
+  
+  .converter-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Кастомные стили для таблицы истории */
+.history-table .ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.history-table .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+}
