@@ -10,12 +10,12 @@ const AnalyticsDashboard = () => {
     const [selectedPair, setSelectedPair] = useState('USD/RUB');
     const [period, setPeriod] = useState('7');
 
-    // Стейт для даних
+
     const [reportData, setReportData] = useState(null);
     const [comparisonData, setComparisonData] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // Функція завантаження головного звіту
+
     const fetchReport = async () => {
         setLoading(true);
         const [from, to] = selectedPair.split('/');
@@ -35,7 +35,7 @@ const AnalyticsDashboard = () => {
         }
     };
 
-    // Функція завантаження таблиці порівняння
+
     const fetchComparison = async () => {
         try {
             const response = await fetch(`${BASE_URL}/analytics/comparison`);
@@ -48,17 +48,17 @@ const AnalyticsDashboard = () => {
         }
     };
 
-    // Оновлюємо дані при зміні фільтрів
+
     useEffect(() => {
         fetchReport();
     }, [selectedPair, period]);
 
-    // Таблицю вантажимо один раз при старті
+
     useEffect(() => {
         fetchComparison();
     }, []);
 
-    // Конфігурація графіка
+
     const chartConfig = {
         data: reportData?.history || [],
         xField: 'date',
@@ -99,7 +99,7 @@ const AnalyticsDashboard = () => {
                             </Select>
                         </div>
 
-                        {/* График */}
+
                         <div style={{ height: 350 }}>
                             {reportData?.history && reportData.history.length > 0 ? (
                                 <Line {...chartConfig} />
@@ -113,7 +113,7 @@ const AnalyticsDashboard = () => {
                 </Col>
             </Row>
 
-            {/* Блок статистики */}
+
             {reportData && (
                 <Row gutter={[16, 16]} style={{ marginTop: 20 }}>
                     <Col xs={24} sm={8}>
@@ -156,7 +156,7 @@ const AnalyticsDashboard = () => {
                         <Card>
                             <Statistic
                                 title="Рекомендация AI"
-                                value={reportData.recommendation.split(' ')[0]} // Беремо перше слово
+                                value={reportData.recommendation.split(' ')[0]}
                                 valueStyle={{ color: '#1890ff' }}
                                 prefix={<PieChartOutlined />}
                             />
@@ -168,7 +168,7 @@ const AnalyticsDashboard = () => {
                 </Row>
             )}
 
-            {/* Таблиця порівняння */}
+
             <Row gutter={[16, 16]} style={{ marginTop: 20 }}>
                 <Col span={24}>
                     <Card title="Сравнение популярных пар (24ч)">

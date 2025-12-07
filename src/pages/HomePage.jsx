@@ -1,4 +1,4 @@
-// pages/HomePage.jsx
+
 import React from 'react';
 import { Typography, Card, Row, Col, List } from 'antd';
 import { 

@@ -2,7 +2,7 @@ const HISTORY_KEY = 'currency_converter_history';
 const FAVORITES_KEY = 'currency_favorites';
 const USER_KEY = 'currency_user';
 
-// История операций
+
 export const saveToHistory = (conversion) => {
   const history = getHistory();
   const newEntry = {
@@ -11,7 +11,7 @@ export const saveToHistory = (conversion) => {
     savedAt: new Date().toISOString()
   };
   
-  const updatedHistory = [newEntry, ...history].slice(0, 100); // Храним только 100 последних записей
+  const updatedHistory = [newEntry, ...history].slice(0, 100);
   localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory));
   return newEntry;
 };
@@ -31,7 +31,7 @@ export const deleteHistoryItem = (id) => {
   localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory));
 };
 
-// Избранные валюты
+
 export const getFavorites = () => {
   const favorites = localStorage.getItem(FAVORITES_KEY);
   return favorites ? JSON.parse(favorites) : [
@@ -56,7 +56,7 @@ export const removeFromFavorites = (from, to) => {
   localStorage.setItem(FAVORITES_KEY, JSON.stringify(updatedFavorites));
 };
 
-// Пользователь (заглушка для авторизации)
+
 export const saveUser = (userData) => {
   localStorage.setItem(USER_KEY, JSON.stringify(userData));
 };

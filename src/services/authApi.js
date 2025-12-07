@@ -1,15 +1,15 @@
-// src/services/authApi.js
+
 const BASE_URL = 'http://127.0.0.1:8000';
 
 export const loginUser = async (email, password) => {
-    // FastAPI очікує дані форми (x-www-form-urlencoded або multipart/form-data) для OAuth2
+
     const formData = new FormData();
-    formData.append('username', email); // FastAPI використовує поле 'username' для email
+    formData.append('username', email);
     formData.append('password', password);
 
     const response = await fetch(`${BASE_URL}/token`, {
         method: 'POST',
-        body: formData, // Не встановлюємо Content-Type вручну, браузер сам поставить multipart/form-data
+        body: formData,
     });
 
     if (!response.ok) {
@@ -17,7 +17,7 @@ export const loginUser = async (email, password) => {
         throw new Error(errorData.detail || 'Ошибка входа');
     }
 
-    return await response.json(); // Поверне { access_token, token_type }
+    return await response.json();
 };
 
 export const registerUser = async (email, password) => {

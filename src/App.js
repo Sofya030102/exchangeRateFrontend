@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import {ConfigProvider} from 'antd';
@@ -6,18 +5,16 @@ import ruRU from 'antd/locale/ru_RU';
 import './App.css';
 import AnalyticsPage from './pages/AnalyticsPage';
 
-// Контекст авторизації
+
 import {AuthProvider} from './context/AuthContext';
 
-// Компоненти авторизації
+
 import AuthModal from './components/Auth/AuthModal';
 
-// Layout компоненты
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
 import Main from './components/Layout/Main';
 
-// Страницы
 import HomePage from './pages/HomePage';
 import ConverterPage from './pages/ConverterPage';
 import HistoryPage from './pages/HistoryPage';

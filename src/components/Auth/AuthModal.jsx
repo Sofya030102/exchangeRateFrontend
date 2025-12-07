@@ -1,4 +1,4 @@
-// src/components/Auth/AuthModal.jsx
+
 import React, { useState, useContext } from 'react';
 import { Modal, Form, Input, Button, Tabs, message, Typography } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined, GoogleOutlined } from '@ant-design/icons';
@@ -10,11 +10,11 @@ const AuthModal = () => {
     const { isModalOpen, closeAuthModal, login, register } = useContext(AuthContext);
     const [activeTab, setActiveTab] = useState('login');
     const [loading, setLoading] = useState(false);
-    const [form] = Form.useForm(); // Хук для управління формою (очистка полів)
+    const [form] = Form.useForm();
 
     const handleCancel = () => {
         closeAuthModal();
-        form.resetFields(); // Очищаємо поля при закритті
+        form.resetFields();
         setActiveTab('login');
     };
 
@@ -28,7 +28,7 @@ const AuthModal = () => {
             } else {
                 await register(values.email, values.password);
                 message.success('Регистрация успешна! Теперь войдите.');
-                setActiveTab('login'); // Перемикаємо на вкладку входу
+                setActiveTab('login');
             }
         } catch (error) {
             message.error(error.message);
@@ -41,7 +41,7 @@ const AuthModal = () => {
         <Modal
             open={isModalOpen}
             onCancel={handleCancel}
-            footer={null} // Прибираємо стандартні кнопки "ОК/Скасувати"
+            footer={null}
             width={400}
             centered
             destroyOnClose
@@ -86,7 +86,7 @@ const AuthModal = () => {
                     name="password"
                     rules={[
                         { required: true, message: 'Введите пароль' },
-                        { min: 6, message: 'Минимум 6 символов' } // Валідація довжини
+                        { min: 6, message: 'Минимум 6 символов' }
                     ]}
                 >
                     <Input.Password

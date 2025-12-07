@@ -8,7 +8,7 @@ const { Title, Text } = Typography;
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
-const CurrencyConverter = ({ onSuccess }) => {
+const CurrencyConverter = ({ onSuccess, initialPair }) => {
     const [amount, setAmount] = useState(1);
     const [fromCurrency, setFromCurrency] = useState('USD');
     const [toCurrency, setToCurrency] = useState('RUB');
@@ -19,18 +19,24 @@ const CurrencyConverter = ({ onSuccess }) => {
     const [favorites, setFavorites] = useState([]);
     const [isFavorite, setIsFavorite] = useState(false);
 
-    // Отримуємо токен (перевіряємо, чи користувач увійшов)
     const token = localStorage.getItem('token');
 
-    // 1. Завантаження списку валют
     useEffect(() => {
-        // Можна брати з api або хардкодом
+
         setCurrencies(getAvailableCurrencies());
     }, []);
 
-    // 2. Завантаження обраного з БЕКЕНДУ
+    useEffect(() => {
+        if (initialPair) {
+            setFromCurrency(initialPair.from);
+            setToCurrency(initialPair.to);
+
+            setResult(null);
+        }
+    }, [initialPair]);
+
     const fetchFavorites = async () => {
-        if (!token) return; // Якщо не залогінений — не вантажимо
+        if (!token) return;
 
         try {
             const response = await fetch(`${BASE_URL}/favorites`, {
@@ -38,7 +44,7 @@ const CurrencyConverter = ({ onSuccess }) => {
             });
             if (response.ok) {
                 const data = await response.json();
-                // Мапимо дані з бекенду (from_currency -> from) для зручності
+
                 const formatted = data.map(item => ({
                     from: item.from_currency,
                     to: item.to_currency,
@@ -55,13 +61,13 @@ const CurrencyConverter = ({ onSuccess }) => {
         fetchFavorites();
     }, [token]);
 
-    // Перевірка, чи є поточна пара в обраному
+
     useEffect(() => {
         const isFav = favorites.some(fav => fav.from === fromCurrency && fav.to === toCurrency);
         setIsFavorite(isFav);
     }, [fromCurrency, toCurrency, favorites]);
 
-    // --- ГОЛОВНА ФУНКЦІЯ КОНВЕРТАЦІЇ ---
+
     const handleConvert = async () => {
         if (!amount || amount <= 0) {
             setError('Введите сумму больше нуля');
@@ -72,11 +78,11 @@ const CurrencyConverter = ({ onSuccess }) => {
         setError(null);
 
         try {
-            // 1. Отримуємо розрахунок (POST /convert)
+
             const conversionData = await convertCurrency(amount, fromCurrency, toCurrency);
             setResult(conversionData);
 
-            // 2. Якщо користувач залогінений — зберігаємо в історію БД (POST /history)
+
             if (token) {
                 await fetch(`${BASE_URL}/history`, {
                     method: 'POST',
@@ -87,7 +93,7 @@ const CurrencyConverter = ({ onSuccess }) => {
                     body: JSON.stringify(conversionData)
                 });
 
-                // 3. ПОВІДОМЛЯЄМО БАТЬКІВСЬКИЙ КОМПОНЕНТ, ЩО ТРЕБА ОНОВИТИ СПИСОК
+
                 if (onSuccess) {
                     onSuccess();
                 }
@@ -101,7 +107,7 @@ const CurrencyConverter = ({ onSuccess }) => {
         }
     };
 
-    // --- РОБОТА З ОБРАНИМ (через Бекенд) ---
+
     const handleFavoriteToggle = async () => {
         if (!token) {
             message.warning("Увійдіть, щоб додавати в обране");
@@ -110,14 +116,14 @@ const CurrencyConverter = ({ onSuccess }) => {
 
         try {
             if (isFavorite) {
-                // Видалення (DELETE /favorites/{from}/{to})
+
                 await fetch(`${BASE_URL}/favorites/${fromCurrency}/${toCurrency}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 message.success("Видалено з обраного");
             } else {
-                // Додавання (POST /favorites)
+
                 await fetch(`${BASE_URL}/favorites`, {
                     method: 'POST',
                     headers: {
@@ -132,7 +138,7 @@ const CurrencyConverter = ({ onSuccess }) => {
                 });
                 message.success("Додано в обране");
             }
-            // Оновлюємо список
+
             fetchFavorites();
         } catch (err) {
             message.error("Помилка оновлення обраного");
@@ -153,11 +159,11 @@ const CurrencyConverter = ({ onSuccess }) => {
 
     return (
         <Card
-            style={{ borderRadius: 16, border: 'none', boxShadow: 'none' }} // Стилі прибрали, бо вони є в батька
+            style={{ borderRadius: 16, border: 'none', boxShadow: 'none' }}
         >
             <Space direction="vertical" size="large" style={{ width: '100%' }}>
 
-                {/* Избранные пары */}
+
                 {favorites.length > 0 && (
                     <div>
                         <Text strong style={{ marginBottom: 8, display: 'block' }}>Избранные пары:</Text>
@@ -176,7 +182,7 @@ const CurrencyConverter = ({ onSuccess }) => {
                     </div>
                 )}
 
-                {/* Форма конвертации */}
+
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 16, alignItems: 'end' }}>
                     <div>
                         <Text strong>Сумма:</Text>
@@ -211,7 +217,7 @@ const CurrencyConverter = ({ onSuccess }) => {
                         </Select>
                     </div>
 
-                    {/* Стрілочка на мобільних приховається або буде внизу, але тут для сітки: */}
+
                     <div style={{ textAlign: 'center', display: 'none' }}>
                         <span>→</span>
                     </div>
@@ -231,7 +237,7 @@ const CurrencyConverter = ({ onSuccess }) => {
                     </div>
                 </div>
 
-                {/* Кнопка конвертации */}
+
                 <Button
                     type="primary"
                     size="large"
@@ -242,7 +248,7 @@ const CurrencyConverter = ({ onSuccess }) => {
                     Конвертировать
                 </Button>
 
-                {/* Сообщения об ошибках */}
+
                 {error && (
                     <Alert
                         message={error}
@@ -251,7 +257,7 @@ const CurrencyConverter = ({ onSuccess }) => {
                     />
                 )}
 
-                {/* Результат */}
+
                 {result && (
                     <Card
                         type="inner"

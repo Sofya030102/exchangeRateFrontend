@@ -10,7 +10,7 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 const TrendForecast = () => {
     const [days, setDays] = useState(7);
-    // Розділяємо пару, щоб зручно слати на бек
+
     const [fromCurrency, setFromCurrency] = useState('USD');
     const [toCurrency, setToCurrency] = useState('RUB');
 
@@ -18,12 +18,12 @@ const TrendForecast = () => {
     const [loading, setLoading] = useState(false);
     const [currencies, setCurrencies] = useState([]);
 
-    // Завантажуємо список валют
+
     useEffect(() => {
         setCurrencies(getAvailableCurrencies());
     }, []);
 
-    // Функція отримання прогнозу
+
     const fetchForecast = async () => {
         setLoading(true);
         try {
@@ -42,11 +42,11 @@ const TrendForecast = () => {
         }
     };
 
-    // Викликаємо API щоразу, коли змінюються параметри (з затримкою debounce, щоб не спамити при руху слайдера)
+
     useEffect(() => {
         const timer = setTimeout(() => {
             fetchForecast();
-        }, 500); // Чекаємо півсекунди після зупинки слайдера
+        }, 500);
 
         return () => clearTimeout(timer);
     }, [days, fromCurrency, toCurrency]);
@@ -95,7 +95,7 @@ const TrendForecast = () => {
             ) : forecastData ? (
                 <div style={{
                     padding: 24,
-                    backgroundColor: forecastData.trend === 'up' ? '#f6ffed' : '#fff1f0', // Зелений або червоний фон
+                    backgroundColor: forecastData.trend === 'up' ? '#f6ffed' : '#fff1f0',
                     borderRadius: 8,
                     textAlign: 'center',
                     border: `1px solid ${forecastData.trend === 'up' ? '#b7eb8f' : '#ffa39e'}`

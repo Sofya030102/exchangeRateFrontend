@@ -13,7 +13,7 @@ const FALLBACK_RATES = {
 
 export const fetchExchangeRates = async (baseCurrency = 'USD') => {
     try {
-        // GET запит до нашого бекенду
+
         const response = await fetch(`${BASE_URL}/rates/${baseCurrency}`);
         if (!response.ok) {
             throw new Error('Не вдалося отримати курси');
@@ -28,16 +28,16 @@ export const fetchExchangeRates = async (baseCurrency = 'USD') => {
 
 export const convertCurrency = async (amount, from, to) => {
     try {
-        // POST запит для розрахунку
+
         const response = await fetch(`${BASE_URL}/convert`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            // Перетворюємо об'єкт у рядок JSON
+
             body: JSON.stringify({
                 amount: amount,
-                from_currency: from, // Важливо: узгоджуємо назви з Pydantic-моделлю на сервері
+                from_currency: from,
                 to_currency: to,
             }),
         });
@@ -53,7 +53,7 @@ export const convertCurrency = async (amount, from, to) => {
     }
 };
 
-// Список валют, які підтримує наш бекенд (FALLBACK_RATES)
+
 export const getAvailableCurrencies = () => {
     return ["USD", "EUR", "RUB", "GBP", "JPY", "CNY"];
 };

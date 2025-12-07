@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Card, DatePicker, InputNumber, Button, Alert, Typography, Select, Row, Col, message} from 'antd';
 import {CalculatorOutlined, ArrowRightOutlined} from '@ant-design/icons';
-import {getAvailableCurrencies} from '../../services/currencyApi'; // Імпортуємо список валют
+import {getAvailableCurrencies} from '../../services/currencyApi';
 
 const {Title, Text} = Typography;
 const {Option} = Select;
@@ -10,8 +10,8 @@ const BASE_URL = 'http://127.0.0.1:8000';
 
 const HistoricalCalculator = () => {
     const [amount, setAmount] = useState(1000);
-    const [fromCurrency, setFromCurrency] = useState('USD'); // Додали стейт для валют
-    const [toCurrency, setToCurrency] = useState('EUR');   // Змінив на EUR за замовчуванням (бо RUB немає історії)
+    const [fromCurrency, setFromCurrency] = useState('USD');
+    const [toCurrency, setToCurrency] = useState('EUR');
 
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
@@ -19,7 +19,7 @@ const HistoricalCalculator = () => {
     const [loading, setLoading] = useState(false);
     const [currencies, setCurrencies] = useState([]);
 
-    // Завантажуємо список валют при старті
+
     useEffect(() => {
         setCurrencies(getAvailableCurrencies());
     }, []);
@@ -33,12 +33,12 @@ const HistoricalCalculator = () => {
         setLoading(true);
         setResult(null);
 
-        // Форматуємо дати у рядок YYYY-MM-DD для API
+
         const dateFromStr = fromDate.format('YYYY-MM-DD');
         const dateToStr = toDate.format('YYYY-MM-DD');
 
         try {
-            // Робимо запит до нашого нового ендпоінту
+
             const response = await fetch(
                 `${BASE_URL}/historical/compare?amount=${amount}&from_curr=${fromCurrency}&to_curr=${toCurrency}&date_from=${dateFromStr}&date_to=${dateToStr}`
             );
@@ -66,7 +66,7 @@ const HistoricalCalculator = () => {
             }
             style={{maxWidth: 600, margin: '20px auto', borderRadius: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.05)'}}
         >
-            {/* Вибір валют */}
+
             <div style={{marginBottom: 20}}>
                 <Text strong>Валютная пара:</Text>
                 <div style={{display: 'flex', alignItems: 'center', gap: 10, marginTop: 8}}>
@@ -177,7 +177,7 @@ const HistoricalCalculator = () => {
                             </div>
                         </div>
                     }
-                    type={result.difference > 0 ? 'success' : 'error'} // Зелене, якщо сума виросла
+                    type={result.difference > 0 ? 'success' : 'error'}
                     showIcon
                 />
             )}

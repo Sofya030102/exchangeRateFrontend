@@ -4,12 +4,12 @@ import { ConfigProvider } from 'antd';
 import ruRU from 'antd/locale/ru_RU';
 import './App.css';
 
-// Layout компоненты
+
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
 import Main from './components/Layout/Main';
 
-// Страницы
+
 import HomePage from './pages/HomePage';
 import ConverterPage from './pages/ConverterPage';
 import HistoryPage from './pages/HistoryPage';

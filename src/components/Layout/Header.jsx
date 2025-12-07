@@ -1,4 +1,4 @@
-// components/Layout/Header.jsx
+
 import React, { useState, useEffect, useContext } from 'react';
 import { Layout, Tabs, Button, Space, Avatar, Dropdown } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import {
     LoginOutlined
 } from '@ant-design/icons';
 
-// Імпортуємо контекст
+
 import { AuthContext } from '../../context/AuthContext';
 
 const { Header: AntHeader } = Layout;
@@ -23,10 +23,10 @@ const AppHeader = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Отримуємо дані та функції з контексту
+
     const { user, logout, openAuthModal } = useContext(AuthContext);
 
-    // Визначаємо активну вкладку на основі URL
+
     const [activeKey, setActiveKey] = useState('home');
 
     useEffect(() => {
@@ -47,14 +47,14 @@ const AppHeader = () => {
         navigate('/');
     };
 
-    // Меню користувача
+
     const userMenuItems = {
         items: [
             {
                 key: 'profile',
                 icon: <UserOutlined />,
                 label: 'Профиль',
-                disabled: true, // Поки що не реалізовано
+                disabled: true,
             },
             {
                 key: 'settings',
@@ -70,7 +70,7 @@ const AppHeader = () => {
                 icon: <LogoutOutlined />,
                 label: 'Выйти',
                 danger: true,
-                onClick: handleLogout, // Обробка виходу
+                onClick: handleLogout,
             },
         ]
     };
@@ -90,7 +90,7 @@ const AppHeader = () => {
             zIndex: 1000
         }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-                {/* Логотип */}
+
                 <Link to="/" style={{ textDecoration: 'none' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
                         <div style={{
@@ -127,7 +127,6 @@ const AppHeader = () => {
                     </div>
                 </Link>
 
-                {/* Вкладки */}
                 <Tabs
                     activeKey={activeKey}
                     onChange={handleTabChange}
@@ -153,14 +152,14 @@ const AppHeader = () => {
                 </Tabs>
             </div>
 
-            {/* Правая часть */}
+
             <Space align="center" size="middle">
                 <Button type="text" style={{ color: '#1890ff' }}>
                     Помощь
                 </Button>
 
                 {user ? (
-                    // ЯКЩО АВТОРИЗОВАНИЙ
+
                     <Dropdown menu={userMenuItems} placement="bottomRight" trigger={['click']}>
                         <div style={{
                             display: 'flex',
@@ -193,7 +192,7 @@ const AppHeader = () => {
                         </div>
                     </Dropdown>
                 ) : (
-                    // ЯКЩО НЕ АВТОРИЗОВАНИЙ -> КНОПКА ВІДКРИВАЄ МОДАЛКУ
+
                     <Button
                         type="primary"
                         icon={<LoginOutlined />}

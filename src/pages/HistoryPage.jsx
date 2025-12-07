@@ -1,24 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Button, Card, Typography, Popconfirm, Tag, Space, Empty, message, Alert } from 'antd';
+import React, { useState, useEffect, useContext } from 'react';
+import { Table, Button, Card, Typography, Popconfirm, Tag, Space, Empty, message } from 'antd';
 import { DeleteOutlined, ReloadOutlined, LoginOutlined } from '@ant-design/icons';
-import { convertCurrency } from '../services/currencyApi'; // Ця функція вже працює з бекендом
+import { convertCurrency } from '../services/currencyApi';
+import { AuthContext } from '../context/AuthContext';
 
 const { Title, Text } = Typography;
 const BASE_URL = 'http://127.0.0.1:8000';
 
 const HistoryPage = () => {
+
+    const { user, openAuthModal } = useContext(AuthContext);
+
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [token, setToken] = useState(localStorage.getItem('token'));
+
 
     useEffect(() => {
-        if (token) {
+        if (user) {
             loadHistory();
+        } else {
+            setHistory([]);
         }
-    }, [token]);
+    }, [user]);
 
     const loadHistory = async () => {
         setLoading(true);
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
         try {
             const response = await fetch(`${BASE_URL}/history`, {
                 headers: {
@@ -30,9 +39,7 @@ const HistoryPage = () => {
                 const data = await response.json();
                 setHistory(data);
             } else if (response.status === 401) {
-                // Токен прострочився
                 localStorage.removeItem('token');
-                setToken(null);
                 message.error("Сессия истекла. Пожалуйста, войдите снова.");
             }
         } catch (error) {
@@ -43,6 +50,7 @@ const HistoryPage = () => {
     };
 
     const handleClearHistory = async () => {
+        const token = localStorage.getItem('token');
         try {
             const response = await fetch(`${BASE_URL}/history`, {
                 method: 'DELETE',
@@ -61,6 +69,7 @@ const HistoryPage = () => {
     };
 
     const handleDeleteItem = async (id) => {
+        const token = localStorage.getItem('token');
         try {
             const response = await fetch(`${BASE_URL}/history/${id}`, {
                 method: 'DELETE',
@@ -70,7 +79,6 @@ const HistoryPage = () => {
             });
 
             if (response.ok) {
-                // Видаляємо елемент з локального стейту, щоб не перезавантажувати все
                 setHistory(prev => prev.filter(item => item.id !== id));
                 message.success("Запись удалена");
             }
@@ -80,11 +88,9 @@ const HistoryPage = () => {
     };
 
     const handleRepeatConversion = async (item) => {
-        // Використовуємо existing convertCurrency service which uses backend
         try {
             const result = await convertCurrency(item.amount, item.from_currency, item.to_currency);
             message.success(`Обновлено: ${item.amount} ${item.from_currency} = ${result.result.toFixed(2)} ${item.to_currency}`);
-            // Опціонально: можна оновити історію, щоб нова операція з'явилася зверху
             loadHistory();
         } catch (error) {
             message.error(`Ошибка: ${error.message}`);
@@ -94,7 +100,7 @@ const HistoryPage = () => {
     const columns = [
         {
             title: 'Дата',
-            dataIndex: 'timestamp', // Змінено з savedAt на timestamp (як на бекенді)
+            dataIndex: 'timestamp',
             key: 'timestamp',
             render: (text) => new Date(text).toLocaleString(),
             sorter: (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
@@ -105,11 +111,9 @@ const HistoryPage = () => {
             render: (_, record) => (
                 <Space>
                     <Text strong>{record.amount}</Text>
-                    {/* Змінено record.from на record.from_currency */}
                     <Tag color="blue">{record.from_currency}</Tag>
                     <span>→</span>
                     <Text strong>{record.result.toFixed(2)}</Text>
-                    {/* Змінено record.to на record.to_currency */}
                     <Tag color="green">{record.to_currency}</Tag>
                 </Space>
             ),
@@ -151,8 +155,8 @@ const HistoryPage = () => {
         },
     ];
 
-    // Якщо користувач не залогінений
-    if (!token) {
+
+    if (!user) {
         return (
             <Card style={{ textAlign: 'center', marginTop: 50 }}>
                 <Empty
@@ -161,7 +165,12 @@ const HistoryPage = () => {
                 >
                     <Text type="secondary">Войдите в систему, чтобы сохранять и просматривать историю конвертаций.</Text>
                     <br /><br />
-                    <Button type="primary" href="/login" icon={<LoginOutlined />}>
+
+                    <Button
+                        type="primary"
+                        icon={<LoginOutlined />}
+                        onClick={openAuthModal}
+                    >
                         Войти
                     </Button>
                 </Empty>
